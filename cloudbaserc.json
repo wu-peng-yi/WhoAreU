@@ -1,0 +1,45 @@
+{
+  "version": "2.0",
+  "envId": "cloud1-2gr0itgbe87c6ba9",
+  "functionRoot": "cloudfunctions",
+  "function": {
+    "name": "whoareu",
+    "runtime": "Nodejs16.13",
+    "timeout": 30,
+    "memorySize": 256
+  },
+  "framework": {
+    "name": "wechat-cloudbase",
+    "plugins": {
+      "function": {
+        "use": "@cloudbase/framework-plugin-function",
+        "inputs": {
+          "functionRootPath": "./cloudfunctions",
+          "functions": [
+            {
+              "name": "draw",
+              "timeout": 30,
+              "envVariables": {},
+              "runtime": "Nodejs16.13",
+              "memory": 256
+            },
+            {
+              "name": "checkin",
+              "timeout": 30,
+              "envVariables": {},
+              "runtime": "Nodejs16.13",
+              "memory": 256
+            },
+            {
+              "name": "history",
+              "timeout": 30,
+              "envVariables": {},
+              "runtime": "Nodejs16.13",
+              "memory": 256
+            }
+          ]
+        }
+      }
+    }
+  }
+}
