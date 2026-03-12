@@ -18,7 +18,69 @@ interface Record {
 
 export default function History() {
   const [records, setRecords] = useState<Record[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+
+  // 模拟历史记录数据
+  const mockRecords: Record[] = [
+    {
+      _id: '1',
+      draw_date: '2026-03-12T10:00:00Z',
+      personality: {
+        id: '1',
+        name: '冷酷杀手',
+        difficulty: 3,
+        description: '话少、果断、不拖泥带水'
+      },
+      is_checkin: true,
+      checkin_rating: 4
+    },
+    {
+      _id: '2',
+      draw_date: '2026-03-11T10:00:00Z',
+      personality: {
+        id: '2',
+        name: '热情推销员',
+        difficulty: 3,
+        description: '自来熟、正能量、感染力十足'
+      },
+      is_checkin: true,
+      checkin_rating: 5
+    },
+    {
+      _id: '3',
+      draw_date: '2026-03-10T10:00:00Z',
+      personality: {
+        id: '3',
+        name: '佛系青年',
+        difficulty: 2,
+        description: '无所谓、都可以、随遇而安'
+      },
+      is_checkin: false
+    },
+    {
+      _id: '4',
+      draw_date: '2026-03-09T10:00:00Z',
+      personality: {
+        id: '4',
+        name: '毒舌评论家',
+        difficulty: 4,
+        description: '犀利、直接、一针见血'
+      },
+      is_checkin: true,
+      checkin_rating: 3
+    },
+    {
+      _id: '5',
+      draw_date: '2026-03-08T10:00:00Z',
+      personality: {
+        id: '5',
+        name: '霸道总裁',
+        difficulty: 3,
+        description: '掌控一切、说一不二'
+      },
+      is_checkin: false
+    }
+  ]
 
   useEffect(() => {
     loadHistory()
@@ -26,23 +88,11 @@ export default function History() {
 
   const loadHistory = async () => {
     setLoading(true)
-
-    try {
-      const res = await Taro.cloud.callFunction({
-        name: 'history',
-        data: { page: 1, pageSize: 30 }
-      })
-
-      const result: any = res.result
-
-      if (result.success) {
-        setRecords(result.data.records)
-      }
-    } catch (error) {
-      console.error('Load history error:', error)
-    } finally {
+    // 使用模拟数据
+    setTimeout(() => {
+      setRecords(mockRecords)
       setLoading(false)
-    }
+    }, 300)
   }
 
   const goToDetail = (recordId: string) => {

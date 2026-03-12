@@ -122,7 +122,8 @@ exports.main = async (event, context) => {
       success: true,
       isRedraw: useResetCoin,
       data: {
-        id: drawResult._id,
+        _id: drawResult._id,
+        recordId: drawResult._id,
         ...selectedPersonality
       }
     }

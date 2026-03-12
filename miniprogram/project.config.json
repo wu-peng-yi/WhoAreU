@@ -1,5 +1,5 @@
 {
-  "miniprogramRoot": "miniprogram/",
+  "miniprogramRoot": "./",
   "compileType": "miniprogram",
   "setting": {
     "useCompilerPlugins": [
@@ -29,7 +29,7 @@
     "disableSWC": true
   },
   "condition": {},
-  "srcMiniprogramRoot": "miniprogram/",
+  "srcMiniprogramRoot": "./",
   "projectname": "whoareu",
   "appid": "wx2b8f1fb7fbf4c0ca",
   "libVersion": "3.3.4",

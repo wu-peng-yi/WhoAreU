@@ -36,6 +36,20 @@
               "envVariables": {},
               "runtime": "Nodejs16.13",
               "memory": 256
+            },
+            {
+              "name": "user",
+              "timeout": 30,
+              "envVariables": {},
+              "runtime": "Nodejs16.13",
+              "memory": 256
+            },
+            {
+              "name": "init",
+              "timeout": 30,
+              "envVariables": {},
+              "runtime": "Nodejs16.13",
+              "memory": 256
             }
           ]
         }

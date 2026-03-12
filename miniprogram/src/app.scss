@@ -1,37 +1,60 @@
 /* 全局样式 */
 page {
   background-color: #f5f5f5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
-    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+  box-sizing: border-box;
 }
 
-/* 主题色 */
-$primary-color: #8B5CF6;
-$secondary-color: #F59E0B;
-$text-color: #333;
-$text-light: #999;
-$border-color: #eee;
-$bg-color: #fff;
+view, text, image, button, input, textarea, scroll-view {
+  box-sizing: border-box;
+}
 
 /* 通用类 */
 .container {
-  padding: 24px;
+  padding: 48rpx;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, $primary-color, #A78BFA);
+  background: linear-gradient(135deg, #8B5CF6, #A78BFA);
   color: #fff;
   border: none;
-  border-radius: 12px;
-  padding: 14px 32px;
-  font-size: 32px;
+  border-radius: 24rpx;
+  padding: 28rpx 64rpx;
+  font-size: 64rpx;
+  font-weight: 600;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #F59E0B, #FBBF24);
+  color: #fff;
+  border: none;
+  border-radius: 24rpx;
+  padding: 28rpx 64rpx;
+  font-size: 64rpx;
   font-weight: 600;
 }
 
 .card {
-  background: $bg-color;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 48rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.08);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gradient-primary {
+  background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+}
+
+.gradient-secondary {
+  background: linear-gradient(135deg, #F59E0B, #FBBF24);
 }

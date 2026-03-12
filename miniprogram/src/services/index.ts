@@ -15,8 +15,9 @@ export const personalityService = {
    * 获取人格详情
    */
   async getDetail(id: string) {
-    // TODO: 实现获取人格详情
-    return null
+    const res = await CloudUtil.callFunction('history', { page: 1, pageSize: 1 })
+    const record = res.records?.find((r: any) => r.personality_id === id || r._id === id)
+    return record?.personality || null
   }
 }
 
@@ -52,7 +53,14 @@ export const userService = {
    * 获取用户信息
    */
   async getInfo() {
-    // TODO: 实现获取用户信息
+    const res = await Taro.cloud.callFunction({
+      name: 'user',
+      data: { action: 'getInfo' }
+    })
+    const result: any = res.result
+    if (result.success) {
+      return result.data
+    }
     return null
   }
 }

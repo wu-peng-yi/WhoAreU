@@ -8,38 +8,33 @@ export default function Card() {
   const [checkinRating, setCheckinRating] = useState(0)
   const [hasCheckin, setHasCheckin] = useState(false)
 
+  // 模拟人格详情数据
+  const mockPersonality = {
+    id: '1',
+    name: '冷酷杀手',
+    category: '性格系',
+    difficulty: 3,
+    description: '话少、果断、不拖泥带水',
+    tasks: [
+      '说话不超过 10 个字/句',
+      '做决定不超过 30 秒',
+      '拒绝一个不必要的请求'
+    ],
+    speech_do: ['行。', '不行。', '晚点说。'],
+    speech_dont: ['我觉得可能 maybe 大概可以试试...'],
+    outfit: '黑/灰/深蓝色系',
+    taboo: '不要解释、不要道歉、不要犹豫'
+  }
+
   useEffect(() => {
     loadPersonality()
   }, [])
 
   const loadPersonality = async () => {
-    const pages = Taro.getCurrentPages()
-    const currentPage = pages[pages.length - 1] as any
-    const recordId = currentPage.options.id
-
-    try {
-      // 这里应该调用 API 获取人格详情
-      // 暂时使用模拟数据
-      const mockData = {
-        id: recordId,
-        name: '冷酷杀手',
-        category: '性格系',
-        difficulty: 3,
-        description: '话少、果断、不拖泥带水',
-        tasks: [
-          '说话不超过 10 个字/句',
-          '做决定不超过 30 秒',
-          '拒绝一个不必要的请求'
-        ],
-        speech_do: ['行。', '不行。', '晚点说。'],
-        speech_dont: ['我觉得可能 maybe 大概可以试试...'],
-        outfit: '黑/灰/深蓝色系',
-        taboo: '不要解释、不要道歉、不要犹豫'
-      }
-      setPersonality(mockData)
-    } catch (error) {
-      console.error('Load personality error:', error)
-    }
+    // 使用模拟数据
+    setTimeout(() => {
+      setPersonality(mockPersonality)
+    }, 200)
   }
 
   const handleCheckin = async () => {
@@ -51,40 +46,12 @@ export default function Card() {
       return
     }
 
-    try {
-      const pages = Taro.getCurrentPages()
-      const currentPage = pages[pages.length - 1] as any
-      const recordId = currentPage.options.id
-
-      const res = await Taro.cloud.callFunction({
-        name: 'checkin',
-        data: {
-          recordId,
-          rating: checkinRating
-        }
-      })
-
-      const result: any = res.result
-
-      if (result.success) {
-        setHasCheckin(true)
-        Taro.showToast({
-          title: '打卡成功',
-          icon: 'success'
-        })
-      } else {
-        Taro.showToast({
-          title: result.error || '打卡失败',
-          icon: 'none'
-        })
-      }
-    } catch (error) {
-      console.error('Checkin error:', error)
-      Taro.showToast({
-        title: '打卡失败，请稍后重试',
-        icon: 'none'
-      })
-    }
+    // 模拟打卡
+    setHasCheckin(true)
+    Taro.showToast({
+      title: '打卡成功',
+      icon: 'success'
+    })
   }
 
   const handleShare = () => {

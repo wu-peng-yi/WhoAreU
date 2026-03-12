@@ -12,9 +12,43 @@ const _ = db.command
  */
 exports.main = async (event, context) => {
   const { OPENID } = cloud.getWXContext()
-  const { page = 1, pageSize = 20 } = event
+  const { page = 1, pageSize = 20, action, recordId } = event
 
   try {
+    // 获取单个记录详情
+    if (action === 'getRecord' && recordId) {
+      const record = await db.collection('draws').doc(recordId).get()
+
+      if (!record.data) {
+        return {
+          success: false,
+          error: '记录不存在'
+        }
+      }
+
+      // 验证是否属于当前用户
+      if (record.data.openid !== OPENID) {
+        return {
+          success: false,
+          error: '无权访问'
+        }
+      }
+
+      // 获取人格详情
+      const personality = await db.collection('personalities')
+        .where({ id: record.data.personality_id })
+        .get()
+
+      return {
+        success: true,
+        data: {
+          ...record.data,
+          personality: personality.data[0]
+        }
+      }
+    }
+
+    // 获取历史记录列表
     const offset = (page - 1) * pageSize
 
     const records = await db.collection('draws')

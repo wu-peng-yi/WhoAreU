@@ -16,40 +16,46 @@ export default function Shop() {
   const [packs, setPacks] = useState<PersonalityPack[]>([])
   const [activeTab, setActiveTab] = useState('all')
 
-  useEffect(() => {
-    loadPacks()
-  }, [])
+  // 模拟人格包数据
+  const mockPacks: PersonalityPack[] = [
+    {
+      id: '1',
+      name: '职业精英包',
+      description: '霸道总裁、贴心管家、精英律师',
+      category: '职业系',
+      price: 5,
+      personalityCount: 5
+    },
+    {
+      id: '2',
+      name: '性格探索包',
+      description: '毒舌评论家、戏精本精、高冷学霸',
+      category: '性格系',
+      price: 5,
+      personalityCount: 5
+    },
+    {
+      id: '3',
+      name: '奇幻冒险包',
+      description: '末日幸存者、外星人访客、穿越古代人',
+      category: '场景系',
+      price: 5,
+      personalityCount: 5
+    },
+    {
+      id: '4',
+      name: '经典角色包',
+      description: '侦探推理王、美食评论家、禅修大师',
+      category: '职业系',
+      price: 8,
+      personalityCount: 8
+    }
+  ]
 
-  const loadPacks = () => {
-    // 模拟数据
-    const mockPacks: PersonalityPack[] = [
-      {
-        id: '1',
-        name: '职业精英包',
-        description: '霸道总裁、贴心管家、精英律师',
-        category: '职业系',
-        price: 5,
-        personalityCount: 5
-      },
-      {
-        id: '2',
-        name: '性格探索包',
-        description: '毒舌评论家、戏精本精、高冷学霸',
-        category: '性格系',
-        price: 5,
-        personalityCount: 5
-      },
-      {
-        id: '3',
-        name: '奇幻冒险包',
-        description: '末日幸存者、外星人访客、穿越古代人',
-        category: '场景系',
-        price: 5,
-        personalityCount: 5
-      }
-    ]
+  useEffect(() => {
+    // 加载模拟数据
     setPacks(mockPacks)
-  }
+  }, [])
 
   const handleBuy = (pack: PersonalityPack) => {
     Taro.showModal({

@@ -6,70 +6,43 @@ import './index.scss'
 export default function Index() {
   const [todayPersonality, setTodayPersonality] = useState<any>(null)
   const [isDrawing, setIsDrawing] = useState(false)
-  const [resetCoins, setResetCoins] = useState(1)
+  const [resetCoins, setResetCoins] = useState(3)
   const [hasDrawnToday, setHasDrawnToday] = useState(false)
 
+  // 模拟人格数据
+  const mockPersonalities = [
+    { id: '1', name: '冷酷杀手', category: '性格系', difficulty: 3, description: '话少、果断、不拖泥带水' },
+    { id: '2', name: '热情推销员', category: '性格系', difficulty: 3, description: '自来熟、正能量、感染力十足' },
+    { id: '3', name: '佛系青年', category: '性格系', difficulty: 2, description: '无所谓、都可以、随遇而安' },
+    { id: '4', name: '毒舌评论家', category: '性格系', difficulty: 4, description: '犀利、直接、一针见血' },
+    { id: '5', name: '霸道总裁', category: '职业系', difficulty: 3, description: '掌控一切、说一不二' },
+  ]
+
   useEffect(() => {
-    checkTodayDraw()
+    // 模拟加载用户信息
+    setResetCoins(3)
   }, [])
 
-  // 检查今日是否已抽取
-  const checkTodayDraw = async () => {
-    try {
-      const res = await Taro.cloud.callFunction({
-        name: 'history',
-        data: { page: 1, pageSize: 1 }
-      })
-
-      const result: any = res.result
-
-      if (result.success && result.data.records.length > 0) {
-        const today = new Date()
-        const recordDate = new Date(result.data.records[0].draw_date)
-
-        if (recordDate.toDateString() === today.toDateString()) {
-          setHasDrawnToday(true)
-          setTodayPersonality(result.data.records[0].personality)
-        }
-      }
-    } catch (error) {
-      console.error('Check today draw error:', error)
-    }
+  // 检查今日是否已抽取 - 静态版本
+  const checkTodayDraw = () => {
+    // 静态页面暂时不实现
   }
 
   // 抽取人格
   const handleDraw = async () => {
     setIsDrawing(true)
 
-    try {
-      const res = await Taro.cloud.callFunction({
-        name: 'draw',
-        data: { useResetCoin: false }
-      })
-
-      const result: any = res.result
-
-      if (result.success) {
-        setTodayPersonality(result.data)
-        setHasDrawnToday(true)
-        Taro.navigateTo({
-          url: `/pages/card/card?id=${result.data.id}`
-        })
-      } else {
-        Taro.showToast({
-          title: result.error || '抽取失败',
-          icon: 'none'
-        })
-      }
-    } catch (error) {
-      console.error('Draw error:', error)
-      Taro.showToast({
-        title: '抽取失败，请稍后重试',
-        icon: 'none'
-      })
-    } finally {
+    // 模拟抽取
+    setTimeout(() => {
+      const random = mockPersonalities[Math.floor(Math.random() * mockPersonalities.length)]
+      setTodayPersonality(random)
+      setHasDrawnToday(true)
       setIsDrawing(false)
-    }
+      Taro.showToast({
+        title: `抽中${random.name}!`,
+        icon: 'success'
+      })
+    }, 800)
   }
 
   // 使用重置币
@@ -85,39 +58,19 @@ export default function Index() {
     Taro.showModal({
       title: '确认重置',
       content: `将消耗 1 个重置币，当前剩余：${resetCoins}`,
-      success: async (res) => {
+      success: (res) => {
         if (res.confirm) {
           setIsDrawing(true)
-
-          try {
-            const drawRes = await Taro.cloud.callFunction({
-              name: 'draw',
-              data: { useResetCoin: true }
-            })
-
-            const result: any = drawRes.result
-
-            if (result.success) {
-              setTodayPersonality(result.data)
-              setResetCoins(prev => prev - 1)
-              Taro.navigateTo({
-                url: `/pages/card/card?id=${result.data.id}`
-              })
-            } else {
-              Taro.showToast({
-                title: result.error || '重置失败',
-                icon: 'none'
-              })
-            }
-          } catch (error) {
-            console.error('Reset error:', error)
-            Taro.showToast({
-              title: '重置失败，请稍后重试',
-              icon: 'none'
-            })
-          } finally {
+          setTimeout(() => {
+            const random = mockPersonalities[Math.floor(Math.random() * mockPersonalities.length)]
+            setTodayPersonality(random)
+            setResetCoins(prev => prev - 1)
             setIsDrawing(false)
-          }
+            Taro.showToast({
+              title: `重置为${random.name}!`,
+              icon: 'success'
+            })
+          }, 800)
         }
       }
     })
