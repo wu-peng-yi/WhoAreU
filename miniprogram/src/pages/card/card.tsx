@@ -1,40 +1,53 @@
 import { useState, useEffect } from 'react'
-import { View, Text, Button, Image } from '@tarojs/components'
+import { View, Text, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import CloudUtil from '../../utils/cloud'
 import './card.scss'
 
 export default function Card() {
+  const [record, setRecord] = useState<any>(null)
   const [personality, setPersonality] = useState<any>(null)
   const [checkinRating, setCheckinRating] = useState(0)
   const [hasCheckin, setHasCheckin] = useState(false)
-
-  // 模拟人格详情数据
-  const mockPersonality = {
-    id: '1',
-    name: '冷酷杀手',
-    category: '性格系',
-    difficulty: 3,
-    description: '话少、果断、不拖泥带水',
-    tasks: [
-      '说话不超过 10 个字/句',
-      '做决定不超过 30 秒',
-      '拒绝一个不必要的请求'
-    ],
-    speech_do: ['行。', '不行。', '晚点说。'],
-    speech_dont: ['我觉得可能 maybe 大概可以试试...'],
-    outfit: '黑/灰/深蓝色系',
-    taboo: '不要解释、不要道歉、不要犹豫'
-  }
+  const [recordId, setRecordId] = useState('')
 
   useEffect(() => {
     loadPersonality()
   }, [])
 
   const loadPersonality = async () => {
-    // 使用模拟数据
-    setTimeout(() => {
-      setPersonality(mockPersonality)
-    }, 200)
+    try {
+      // 从 URL 参数获取 recordId
+      const event = Taro.getCurrentInstance()
+      const { recordId } = event.router?.params || {}
+
+      if (!recordId) {
+        Taro.showToast({
+          title: '参数错误',
+          icon: 'none'
+        })
+        return
+      }
+
+      setRecordId(recordId)
+
+      // 获取记录详情
+      const result = await CloudUtil.getRecord(recordId)
+      if (result.success && result.data) {
+        setRecord(result.data)
+        setPersonality(result.data.personality)
+        setHasCheckin(result.data.is_checkin)
+        if (result.data.checkin_rating) {
+          setCheckinRating(result.data.checkin_rating)
+        }
+      }
+    } catch (error) {
+      console.error('Load personality error:', error)
+      Taro.showToast({
+        title: '加载失败',
+        icon: 'none'
+      })
+    }
   }
 
   const handleCheckin = async () => {
@@ -46,12 +59,21 @@ export default function Card() {
       return
     }
 
-    // 模拟打卡
-    setHasCheckin(true)
-    Taro.showToast({
-      title: '打卡成功',
-      icon: 'success'
-    })
+    try {
+      const result = await CloudUtil.checkin(recordId, checkinRating)
+      if (result.success) {
+        setHasCheckin(true)
+        Taro.showToast({
+          title: '打卡成功',
+          icon: 'success'
+        })
+      }
+    } catch (error: any) {
+      Taro.showToast({
+        title: error.message || '打卡失败',
+        icon: 'none'
+      })
+    }
   }
 
   const handleShare = () => {
@@ -100,7 +122,7 @@ export default function Card() {
         {/* 说话方式 */}
         <View className='card-section'>
           <Text className='section-title'>💬 说话方式</Text>
-          <View className='speech对比'>
+          <View className='speech-compare'>
             <View className='speech-dont'>
               <Text className='speech-label'>❌</Text>
               <Text className='speech-text'>{personality.speech_dont[0]}</Text>
