@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { View, Text, Button } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import CloudUtil from '../../utils/cloud'
 import './card.scss'
@@ -21,6 +21,8 @@ export default function Card() {
       const event = Taro.getCurrentInstance()
       const { recordId } = event.router?.params || {}
 
+      console.log('Card page recordId:', recordId)
+
       if (!recordId) {
         Taro.showToast({
           title: '参数错误',
@@ -33,7 +35,17 @@ export default function Card() {
 
       // 获取记录详情
       const result = await CloudUtil.getRecord(recordId)
+      console.log('Get record result:', result)
+
       if (result.success && result.data) {
+        setRecord(result.data)
+        setPersonality(result.data.personality)
+        setHasCheckin(result.data.is_checkin)
+        if (result.data.checkin_rating) {
+          setCheckinRating(result.data.checkin_rating)
+        }
+      } else if (result.data && result.data.personality) {
+        // 兼容直接返回 data 的情况
         setRecord(result.data)
         setPersonality(result.data.personality)
         setHasCheckin(result.data.is_checkin)
@@ -172,9 +184,9 @@ export default function Card() {
                 </Text>
               ))}
             </View>
-            <Button className='btn-checkin' onClick={handleCheckin}>
+            <View className='btn-checkin' onClick={handleCheckin}>
               确认打卡
-            </Button>
+            </View>
           </View>
         )}
       </View>

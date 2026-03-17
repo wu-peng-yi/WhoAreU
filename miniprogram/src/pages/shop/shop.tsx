@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { View, Text, ScrollView, Button } from '@tarojs/components'
+import { View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import './shop.scss'
 
@@ -133,9 +133,9 @@ export default function Shop() {
                 </View>
 
                 <View className='pack-action'>
-                  <Button className='btn-buy' onClick={() => handleBuy(pack)}>
+                  <View className='btn-buy' onClick={() => handleBuy(pack)}>
                     立即购买
-                  </Button>
+                  </View>
                 </View>
               </View>
             ))}
@@ -156,7 +156,9 @@ export default function Shop() {
               <Text className='price-sub'>年费¥99</Text>
             </View>
           </View>
-          <Button className='btn-vip'>立即开通</Button>
+          <View className='btn-vip' onClick={() => Taro.showToast({ title: '会员功能开发中', icon: 'none' })}>
+            立即开通
+          </View>
         </View>
       </View>
     </View>

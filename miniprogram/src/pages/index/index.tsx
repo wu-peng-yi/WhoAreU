@@ -10,17 +10,44 @@ export default function Index() {
   const [resetCoins, setResetCoins] = useState(3)
   const [hasDrawnToday, setHasDrawnToday] = useState(false)
   const [todayRecordId, setTodayRecordId] = useState('')
+  const [showInit, setShowInit] = useState(false)
 
   useEffect(() => {
     loadUserData()
   }, [])
+
+  // 初始化人格数据
+  const handleInit = async () => {
+    try {
+      const result = await CloudUtil.initPersonalities()
+      if (result.success) {
+        Taro.showToast({
+          title: result.message || '初始化成功',
+          icon: 'success'
+        })
+        setShowInit(false)
+      } else {
+        Taro.showToast({
+          title: result.message || result.error,
+          icon: 'none'
+        })
+      }
+    } catch (error: any) {
+      Taro.showToast({
+        title: error.message || '初始化失败',
+        icon: 'none'
+      })
+    }
+  }
 
   // 加载用户数据和今日抽取状态
   const loadUserData = async () => {
     try {
       // 获取用户信息
       const userInfo = await CloudUtil.getUserInfo()
-      setResetCoins(userInfo.coins || 3)
+      if (userInfo.success) {
+        setResetCoins(userInfo.data?.coins || 3)
+      }
 
       // 检查今日是否已抽取
       await checkTodayDraw()
@@ -32,10 +59,10 @@ export default function Index() {
   // 检查今日是否已抽取
   const checkTodayDraw = async () => {
     try {
-      const history = await CloudUtil.getHistory(1, 1)
-      if (history.data && history.data.records && history.data.records.length > 0) {
+      const result = await CloudUtil.getHistory(1, 1)
+      if (result.success && result.data.records && result.data.records.length > 0) {
         const today = new Date().toISOString().split('T')[0]
-        const latestRecord = history.data.records[0]
+        const latestRecord = result.data.records[0]
         const drawDate = new Date(latestRecord.draw_date).toISOString().split('T')[0]
 
         if (drawDate === today) {
@@ -56,7 +83,7 @@ export default function Index() {
     try {
       const result = await CloudUtil.draw(false)
 
-      if (result.success) {
+      if (result.success && result.data) {
         setTodayPersonality(result.data.personality || result.data)
         setTodayRecordId(result.data._id || result.data.recordId)
         setHasDrawnToday(true)
@@ -95,7 +122,7 @@ export default function Index() {
           try {
             const result = await CloudUtil.draw(true)
 
-            if (result.success) {
+            if (result.success && result.data) {
               setTodayPersonality(result.data.personality || result.data)
               setResetCoins(prev => prev - 1)
               Taro.showToast({
@@ -175,6 +202,22 @@ export default function Index() {
         <Text className='nav-item' onClick={() => Taro.switchTab({ url: '/pages/shop/shop' })}>
           🏪 商店
         </Text>
+      </View>
+
+      {/* 调试按钮 - 初始化数据 */}
+      <View className='debug-area'>
+        <Text className='debug-btn' onClick={() => setShowInit(true)}>
+          🔧 初始化人格数据
+        </Text>
+        {showInit && (
+          <View className='init-confirm'>
+            <Text>确定要初始化人格数据吗？</Text>
+            <View className='init-btns'>
+              <Text className='init-cancel' onClick={() => setShowInit(false)}>取消</Text>
+              <Text className='init-confirm-btn' onClick={handleInit}>确定</Text>
+            </View>
+          </View>
+        )}
       </View>
     </View>
   )

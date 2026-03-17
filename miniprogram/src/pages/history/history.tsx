@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import CloudUtil from '../../utils/cloud'
 import './history.scss'
 
@@ -25,11 +25,22 @@ export default function History() {
     loadHistory()
   }, [])
 
+  useDidShow(() => {
+    // 每次页面显示时刷新数据
+    loadHistory()
+  })
+
   const loadHistory = async () => {
     setLoading(true)
     try {
       const result = await CloudUtil.getHistory(1, 50)
+      console.log('History result:', result)
       if (result.success && result.data.records) {
+        console.log('History records:', result.data.records)
+        // 检查并输出每条记录的 _id
+        result.data.records.forEach((record: any, index: number) => {
+          console.log(`Record ${index} _id:`, record._id)
+        })
         setRecords(result.data.records)
       }
     } catch (error) {
@@ -44,6 +55,7 @@ export default function History() {
   }
 
   const goToDetail = (recordId: string) => {
+    console.log('Navigate to card with recordId:', recordId)
     Taro.navigateTo({
       url: `/pages/card/card?recordId=${recordId}`
     })

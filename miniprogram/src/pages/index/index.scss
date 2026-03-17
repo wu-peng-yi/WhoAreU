@@ -181,3 +181,57 @@
     transform: rotateY(0deg);
   }
 }
+
+// 调试区域
+.debug-area {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  z-index: 999;
+
+  .debug-btn {
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+
+  .init-confirm {
+    position: absolute;
+    bottom: 50px;
+    right: 0;
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+
+    text {
+      display: block;
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    .init-btns {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+
+      .init-cancel {
+        font-size: 22px;
+        color: #999;
+        padding: 8px 16px;
+      }
+
+      .init-confirm-btn {
+        font-size: 22px;
+        color: #8B5CF6;
+        font-weight: 600;
+        padding: 8px 16px;
+      }
+    }
+  }
+}

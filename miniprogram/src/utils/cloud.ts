@@ -16,11 +16,8 @@ class CloudUtil {
 
       const result: any = res.result
 
-      if (result.success) {
-        return result.data
-      } else {
-        throw new Error(result.error || '云函数调用失败')
-      }
+      return result
+
     } catch (error) {
       console.error(`Cloud function [${name}] error:`, error)
       throw error
@@ -76,7 +73,15 @@ class CloudUtil {
    * 初始化人格数据
    */
   static async initPersonalities() {
-    return CloudUtil.callFunction('init')
+    try {
+      const res = await Taro.cloud.callFunction({
+        name: 'init'
+      })
+      return res.result
+    } catch (error) {
+      console.error('Init personalities error:', error)
+      throw error
+    }
   }
 }
 
