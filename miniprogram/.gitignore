@@ -1,0 +1,33 @@
+# 依赖
+node_modules/
+npm/
+dist/
+
+# 日志
+logs/
+*.log
+npm-debug.log*
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+*.tmp
+*.temp
+
+# 微信开发者工具
+.project.private.config.js
+user.config
+
+# 环境变量
+.env
+.env.local
+.env.*.local
